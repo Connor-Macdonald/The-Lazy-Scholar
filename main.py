@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, send_from_directory
 from flask_cors import CORS, cross_origin
 from json import dumps
 from flask_jsonpify import jsonify
@@ -15,6 +15,14 @@ APIKey = APIKeystring[10:len(APIKeystring) - 1]
 
 app = Flask(__name__)
 #CORS(app)
+
+@app.route('/<path:path>', methods=['GET'])
+def static_proxy(path):
+  return send_from_directory('./templates', path)
+
+@app.route('/')
+def root():
+  return send_from_directory('./templates', 'index.html')
 
 # API for doing search
 @app.route('/search', methods=['GET'])
@@ -172,4 +180,4 @@ def removeRedundancy(givenstr):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
